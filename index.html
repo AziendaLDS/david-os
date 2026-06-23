@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="David OS">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>David OS</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface2: #141414;
+    --border: #1e1e1e;
+    --text: #f0f0f0;
+    --muted: #555;
+    --muted2: #888;
+    --accent: #c8f135;
+    --red: #ff4d1c;
+    --yellow: #f5c518;
+    --blue: #38bdf8;
+    --purple: #a78bfa;
+    --green: #4ade80;
+    --orange: #fb923c;
+    --skin: #c4845a;
+    --supp: #4a7fb5;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    padding: 0 0 80px;
+    margin: 0;
+  }
+
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 24px; }
+
+  /* STICKY NAV */
+  .topnav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10,10,10,0.92);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 24px;
+  }
+  .topnav-inner {
+    max-width: 920px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .topnav .brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    margin-right: 12px;
+  }
+  .topnav a {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted2);
+    text-decoration: none;
+    padding: 5px 10px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .topnav a:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* PAGE HEADER */
+  .page-header {
+    padding: 48px 0 32px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .page-header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 9vw, 80px);
+    line-height: 0.9;
+    letter-spacing: 2px;
+  }
+  .page-header h1 span { color: var(--accent); }
+  .page-header .meta {
+    text-align: right;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--muted);
+    line-height: 2;
+  }
+
+  /* SECTION SHELL */
+  .section {
+    padding-top: 56px;
+    margin-top: 8px;
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 30px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .section-title .num {
+    font-size: 16px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+  .section-intro {
+    font-size: 13px;
+    color: var(--muted2);
+    line-height: 1.7;
+    margin-bottom: 24px;
+    max-width: 680px;
+    border-left: 2px solid var(--border);
+    padding-left: 16px;
+  }
+
+  /* SCHEDULE BLOCKS */
+  .schedule { display: flex; flex-direction: column; gap: 3px; margin-bottom: 24px; }
+  .sub-title {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--muted2);
+    margin: 24px 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  .block {
+    display: grid;
+    grid-template-columns: 120px 1fr auto;
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  @media (max-width: 640px) { .block { grid-template-columns: 90px 1fr; } .block-tag { display: none; } }
+  .block-time {
+    padding: 12px 16px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    background: #0f0f0f;
+    border-right: 1px solid var(--border);
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .block-content { padding: 12px 18px; display: flex; flex-direction: column; justify-content: center; gap: 2px; }
+  .block-title { font-size: 14px; font-weight: 500; color: var(--text); }
+  .block-detail { font-size: 11px; color: var(--muted); font-style: italic; line-height: 1.5; }
+  .block-tag { padding: 12px 16px; display: flex; align-items: center; justify-content: center; border-left: 1px solid var(--border); }
+  .tag { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; padding: 3px 8px; border-radius: 2px; font-weight: 500; white-space: nowrap; }
+
+  .type-sleep { border-left: 3px solid #4a6fa5; } .type-sleep .block-time { color: #7ba3d4; }
+  .type-morning { border-left: 3px solid #f5a623; } .type-morning .block-time { color: #f5a623; }
+  .type-deep { border-left: 3px solid var(--accent); } .type-deep .block-time { color: var(--accent); }
+  .type-gym { border-left: 3px solid var(--green); } .type-gym .block-time { color: var(--green); }
+  .type-calls { border-left: 3px solid var(--red); } .type-calls .block-time { color: var(--red); }
+  .type-free { border-left: 3px solid var(--purple); } .type-free .block-time { color: var(--purple); }
+  .type-content { border-left: 3px solid var(--blue); } .type-content .block-time { color: var(--blue); }
+  .type-wind { border-left: 3px solid #888; } .type-wind .block-time { color: #888; }
+  .tag-sleep { background: rgba(74,111,165,0.2); color: #7ba3d4; }
+  .tag-morning { background: rgba(245,166,35,0.15); color: #f5c518; }
+  .tag-deep { background: rgba(200,241,53,0.1); color: var(--accent); }
+  .tag-gym { background: rgba(74,222,128,0.1); color: var(--green); }
+  .tag-calls { background: rgba(255,77,28,0.15); color: #ff7a5c; }
+  .tag-free { background: rgba(167,139,250,0.15); color: var(--purple); }
+  .tag-content { background: rgba(56,189,248,0.15); color: var(--blue); }
+  .tag-wind { background: rgba(136,136,136,0.15); color: #aaa; }
+
+  /* RULES GRID */
+  .rules-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 640px) { .rules-grid { grid-template-columns: 1fr; } }
+  .rule-card { background: var(--surface); border: 1px solid var(--border); padding: 16px 18px; display: flex; gap: 12px; align-items: flex-start; }
+  .rule-emoji { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .rule-text { font-size: 12px; color: #aaa; line-height: 1.6; }
+  .rule-text strong { color: var(--text); font-weight: 500; display: block; margin-bottom: 2px; font-size: 13px; }
+
+  /* GENERIC CARD TABLE (workout / food) */
+  .card { background: var(--surface); border: 1px solid var(--border); overflow: hidden; margin-bottom: 24px; }
+  .card-head { padding: 18px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 14px; }
+  .card-num { font-family: 'Bebas Neue', sans-serif; font-size: 40px; line-height: 1; opacity: 0.18; }
+  .card-titles { flex: 1; }
+  .card-label { font-size: 10px; text-transform: uppercase; letter-spacing: 3px; color: var(--muted); margin-bottom: 2px; }
+  .card-title { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 1px; }
+  .card-focus { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; padding: 4px 10px; border: 1px solid currentColor; opacity: 0.7; }
+
+  .d1 { border-top: 2px solid var(--accent); } .d1 .card-num, .d1 .card-title, .d1 .card-focus { color: var(--accent); }
+  .d2 { border-top: 2px solid var(--red); } .d2 .card-num, .d2 .card-title, .d2 .card-focus { color: var(--red); }
+  .d3 { border-top: 2px solid var(--blue); } .d3 .card-num, .d3 .card-title, .d3 .card-focus { color: var(--blue); }
+  .d4 { border-top: 2px solid var(--purple); } .d4 .card-num, .d4 .card-title, .d4 .card-focus { color: var(--purple); }
+  .d5 { border-top: 2px solid var(--orange); } .d5 .card-num, .d5 .card-title, .d5 .card-focus { color: var(--orange); }
+
+  table { width: 100%; border-collapse: collapse; }
+  th { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: var(--muted); font-weight: 400; padding: 12px 24px; text-align: left; border-bottom: 1px solid var(--border); background: #0d0d0d; }
+  td { padding: 14px 24px; font-size: 14px; border-bottom: 1px solid #161616; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  .ex-name { color: var(--text); font-weight: 400; }
+  .ex-note { font-size: 11px; color: var(--muted); margin-top: 2px; line-height: 1.5; }
+  .sets { color: var(--muted); font-size: 13px; white-space: nowrap; }
+  .reps { font-weight: 500; font-size: 13px; white-space: nowrap; }
+  .timing-col { font-size: 12px; color: var(--accent); white-space: nowrap; }
+
+  .t2 { display: inline-block; font-size: 9px; text-transform: uppercase; letter-spacing: 1px; padding: 2px 7px; border-radius: 2px; font-weight: 500; }
+  .t-rehab { background: rgba(255,77,28,0.15); color: var(--red); }
+  .t-mobility { background: rgba(200,241,53,0.1); color: var(--accent); }
+  .t-strength { background: rgba(56,189,248,0.1); color: var(--blue); }
+  .t-core { background: rgba(167,139,250,0.1); color: var(--purple); }
+  .t-size { background: rgba(251,146,60,0.15); color: var(--orange); }
+  .t-zinc { background: rgba(167,139,250,0.15); color: var(--purple); }
+
+  .card-note { padding: 14px 24px; background: #0d0d0d; border-top: 1px solid var(--border); font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .card-note strong { color: var(--text); font-weight: 500; }
+
+  .callout { margin: 16px 0; padding: 12px 16px; background: #0f0f0f; border-left: 2px solid var(--red); font-size: 12px; color: var(--muted2); line-height: 1.6; }
+  .callout.accent { border-left-color: var(--accent); }
+  .callout strong { color: var(--text); font-weight: 500; }
+
+  /* PREHAB */
+  .prehab-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 640px) { .prehab-grid { grid-template-columns: 1fr; } }
+  .prehab-col h4 { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--muted2); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  .prehab-item { display: flex; justify-content: space-between; align-items: baseline; padding: 8px 0; border-bottom: 1px solid #161616; font-size: 14px; }
+  .prehab-item:last-child { border-bottom: none; }
+  .prehab-item .dur { color: var(--accent); font-size: 12px; font-weight: 500; white-space: nowrap; margin-left: 12px; }
+
+  /* FLOW (anchors / meal structure) */
+  .flow-item { display: flex; align-items: flex-start; gap: 16px; padding: 16px 24px; border-bottom: 1px solid #161616; }
+  .flow-item:last-child { border-bottom: none; }
+  .flow-time { font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: var(--accent); min-width: 130px; white-space: nowrap; }
+  .flow-title { font-size: 14px; color: var(--text); margin-bottom: 3px; }
+  .flow-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+  /* SWAP */
+  .swap-row { display: flex; align-items: center; gap: 16px; padding: 14px 24px; border-bottom: 1px solid #161616; }
+  .swap-row:last-child { border-bottom: none; }
+  .swap-old { flex: 1; font-size: 13px; color: var(--muted); text-decoration: line-through; text-decoration-color: var(--red); }
+  .swap-arrow { color: var(--accent); font-size: 14px; }
+  .swap-new { flex: 1; font-size: 13px; color: var(--text); }
+  .swap-new .sn { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  /* AVOID */
+  .avoid-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 640px) { .avoid-grid { grid-template-columns: 1fr; } }
+  .avoid-card { background: #140d0d; border: 1px solid #2a1a1a; border-left: 3px solid var(--red); padding: 12px 16px; }
+  .avoid-name { font-size: 13px; font-weight: 500; color: #ff7a5c; margin-bottom: 4px; }
+  .avoid-reason { font-size: 11px; color: var(--muted2); line-height: 1.5; }
+
+  /* SKIN / SUPP STEP LIST */
+  .step-cols { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  @media (max-width: 760px) { .step-cols { grid-template-columns: 1fr; } }
+  .step-block { background: var(--surface); border: 1px solid var(--border); overflow: hidden; }
+  .step-head { padding: 14px 18px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); }
+  .step-head .em { font-size: 18px; }
+  .step-head .lbl { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 2px; }
+  .sh-am .lbl { color: #f5a623; } .sh-am { border-top: 2px solid #f5a623; }
+  .sh-mid .lbl { color: var(--blue); } .sh-mid { border-top: 2px solid var(--blue); }
+  .sh-pm .lbl { color: var(--purple); } .sh-pm { border-top: 2px solid var(--purple); }
+  .step { padding: 10px 18px; border-bottom: 1px solid #161616; display: flex; align-items: flex-start; gap: 10px; }
+  .step:last-child { border-bottom: none; }
+  .step-dot { width: 8px; height: 8px; border-radius: 1px; margin-top: 5px; flex-shrink: 0; }
+  .sd-skin { background: var(--skin); } .sd-supp { background: var(--supp); }
+  .step-name { font-size: 13px; font-weight: 500; color: var(--text); line-height: 1.3; }
+  .step-detail { font-size: 11px; color: var(--muted); margin-top: 2px; line-height: 1.4; font-style: italic; }
+  .step-badge { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; padding: 2px 6px; border-radius: 2px; font-weight: 500; white-space: nowrap; margin-top: 3px; display: inline-block; }
+  .b-skin { background: rgba(196,132,90,0.15); color: #c4845a; }
+  .b-supp { background: rgba(74,127,181,0.15); color: #7ba3d4; }
+  .b-always { background: rgba(74,222,128,0.12); color: var(--green); }
+  .b-alt { background: rgba(245,197,24,0.12); color: var(--yellow); }
+
+  .legend { display: flex; gap: 20px; margin-bottom: 20px; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted2); }
+  .legend-dot { width: 12px; height: 12px; border-radius: 2px; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+  .notes-block { background: var(--surface); border: 1px solid var(--border); overflow: hidden; }
+  .notes-head { padding: 12px 18px; background: #0d0d0d; border-bottom: 1px solid var(--border); }
+  .notes-head h3 { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 2px; color: var(--accent); }
+  .note-item { padding: 10px 18px; border-bottom: 1px solid #161616; font-size: 12px; color: #bbb; line-height: 1.5; display: flex; gap: 8px; align-items: flex-start; }
+  .note-item:last-child { border-bottom: none; }
+  .note-item::before { content: "→"; color: var(--accent); font-weight: 500; flex-shrink: 0; }
+  .note-item strong { color: var(--text); font-weight: 500; }
+
+  .footer { margin-top: 64px; padding-top: 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; flex-wrap: wrap; gap: 8px; }
+</style>
+</head>
+<body>
+
+<!-- STICKY NAV -->
+<div class="topnav">
+  <div class="topnav-inner">
+    <span class="brand">DAVID OS</span>
+    <a href="#schedule">Schedule</a>
+    <a href="#rules">Non-Negotiables</a>
+    <a href="#training">Training</a>
+    <a href="#nutrition">Nutrition</a>
+    <a href="#meals">Meal Timing</a>
+    <a href="#skincare">Skincare</a>
+    <a href="#supplements">Supplements</a>
+  </div>
+</div>
+
+<div class="wrap">
+
+<div class="page-header">
+  <h1>DAVID <span>OS</span></h1>
+  <div class="meta">
+    Luda AI · Personal Brand · Body<br>
+    Rome, Italy<br>
+    Updated June 2026
+  </div>
+</div>
+
+<!-- ============ SCHEDULE ============ -->
+<div class="section" id="schedule">
+  <div class="section-title"><span class="num">01</span> Daily Schedule</div>
+  <div class="section-intro">Your time-blocked operating rhythm. Built around a 7:00 AM wake and a midnight bedtime. The morning routine, gym, and wind-down here tie directly into the Training, Nutrition, Skincare, and Supplement sections below.</div>
+
+  <div class="sub-title">Monday – Friday</div>
+  <div class="schedule">
+    <div class="block type-morning">
+      <div class="block-time">7:00 AM</div>
+      <div class="block-content">
+        <div class="block-title">Wake — Morning Routine</div>
+        <div class="block-detail">Sunlight immediately, no sunglasses. Water. AM skincare. AM supplements (creatine, D3+K2, omega-3, zinc). No phone for 20 min.</div>
+      </div>
+      <div class="block-tag"><span class="tag tag-morning">Morning</span></div>
+    </div>
+    <div class="block type-deep">
+      <div class="block-time">7:30 AM</div>
+      <div class="block-content">
+        <div class="block-title">Deep Work Block 1 — 90 min</div>
+        <div class="block-detail">Highest cognitive load. Strategy, content, product building, writing. Brain is freshest here — protect this block aggressively.</div>
+      </div>
+      <div class="block-tag"><span class="tag tag-deep">Deep Work</span></div>
+    </div>
+    <div class="block type-morning">
+      <div class="block-time">9:00 AM</div>
+      <div class="block-content">
+        <div class="block-title">Coffee + Light Admin — 30 min</div>
+        <div class="block-detail">First coffee now — ~2hrs after waking lets cortisol settle first. Emails, quick replies, gym prep. Transition time, no heavy thinking.</div>
+      </div>
+      <div class="block-tag"><span class="tag tag-morning">Admin</span></div>
+    </div>
+    <div class="block type-gym">
+      <div class="block-time">9:30 AM</div>
+      <div class="block-content">
+        <div class="block-title">Gym — door to door</div>
+        <div class="block-detail">Daily prehab protocol before every session. Follow the 5-day program (see Training). Still fasted — first meal comes after.</div>
+      </div>
+      <div class="block-tag"><span class="tag tag-gym">Gym</span></div>
+    </div>
+    <div class="block type-morning">
+      <div class="block-time">11:30 AM</div>
+      <div class="block-content">
+        <div class="block-title">Shower, Decompress</div>
+        <div class="block-detail">Evening skincare not needed here — just rinse. Don't rush this, it's part of the schedule not wasted time.</div>
+      </div>
+      <div class="block-tag"><span class="tag tag-morning">Recovery</span></div>
+    </div>
+    <div class="block type-deep">
+      <div class="block-time">12:00 PM</div>
+      <div class="block-content">
+        <div class="block-title">Meal 1 + Deep Work Block 2 — 2 hrs</div>
+        <div class="block-detail">Break the fast with the big meal (see Meal Timing). CRM work, lead follow-ups, email campaign, Instantly sequences. Focused but lower load than Block 1.</div>
+      </div>
+      <div class="block-tag"><span class="tag tag-deep">Deep Work</span></div>
+    </div>
+    <div class="block type-free">
+      <div class="block-time">2:00 PM</div>
+      <div class="block-content">
+        <div class="block-title">Walk + Free Time — 1 hr</div>
+        <div class="block-detail">Laptop closed. Go outside. Rome in the afternoon — better light, better energy. Mental reset before the calling block. Non-negotiable.</div>
+      </div>
+      <div class="block-tag"><span class="tag tag-free">Free Time</span></div>
+    </div>
+    <div class="block type-calls">
+      <div class="block-time">3:00 PM</div>
+      <div class="block-content">
+        <div class="block-title">Cold Calling Block — 5 hrs</div>
+        <div class="block-detail">10am–3pm East Coast. One uninterrupted block — no splitting, no context switching. Get into the rhythm and stay there. Target 60–70 calls. Stick to the opener scripts.</div>
+      </div>
+      <div class="block-tag"><span class="tag tag-calls">Calls</span></div>
+    </div>
+    <div class="block type-content">
+      <div class="block-time">8:00 PM</div>
+      <div class="block-content">
+        <div class="block-title">Content Work — 2 hrs</div>
+        <div class="block-detail">LinkedIn drafts, Substack writing, YouTube scripting, scheduling. Lower intensity — creative, not grind. Meal 2 fits around here on training days.</div>
+      </div>
+      <div class="block-tag"><span class="tag tag-content">Content</span></div>
+    </div>
+    <div class="block type-wind">
+      <div class="block-time">10:00 PM</div>
+      <div class="block-content">
+        <div class="block-title">Wind Down — 1 hr</div>
+        <div class="block-detail">Hard stop on work. Read, journal, prep tomorrow. PM supplements (magnesium + ashwagandha). PM skincare. No stimulating screens. Pillowcase check.</div>
+      </div>
+      <div class="block-tag"><span class="tag tag-wind">Wind Down</span></div>
+    </div>
+    <div class="block type-sleep">
+      <div class="block-time">11:00 PM–11:30 PM</div>
+      <div class="block-content">
+        <div class="block-title">Sleep</div>
+        <div class="block-detail">7–7.5 hrs against the 7am wake. Devices in kitchen. No exceptions.</div>
+      </div>
+      <div class="block-tag"><span class="tag tag-sleep">Sleep</span></div>
+    </div>
+  </div>
+
+  <div class="sub-title">Saturday — Content Day</div>
+  <div class="schedule">
+    <div class="block type-morning">
+      <div class="block-time">7:00 AM</div>
+      <div class="block-content">
+        <div class="block-title">Wake — same time, hold the rhythm</div>
+        <div class="block-detail">Don't blow up the schedule on weekends — consistent wake time is what makes the whole week work. Sunlight, water, skincare, supplements.</div>
+      </div>
+      <div class="block-tag"><span class="tag tag-morning">Morning</span></div>
+    </div>
+    <div class="block type-content">
+      <div class="block-time">10:00 AM</div>
+      <div class="block-content">
+        <div class="block-title">YouTube — Batch Record 2 Videos</div>
+        <div class="block-detail">Scripts already prepped during evening blocks. Record both back to back while in the zone.</div>
+      </div>
+      <div class="block-tag"><span class="tag tag-content">Content</span></div>
+    </div>
+    <div class="block type-content">
+      <div class="block-time">12:00 PM</div>
+      <div class="block-content">
+        <div class="block-title">Substack + LinkedIn — Write & Schedule</div>
+        <div class="block-detail">Convert YouTube transcripts, light edit, add your voice. Draft & schedule the week's LinkedIn posts in one session.</div>
+      </div>
+      <div class="block-tag"><span class="tag tag-content">Content</span></div>
+    </div>
+    <div class="block type-free">
+      <div class="block-time">2:00 PM</div>
+      <div class="block-content">
+        <div class="block-title">Rome — Free Time</div>
+        <div class="block-detail">Content done by 2pm. Laptop closed. Museum, neighbourhood, food, friends. This is why you moved here. No guilt.</div>
+      </div>
+      <div class="block-tag"><span class="tag tag-free">Free Time</span></div>
+    </div>
+    <div class="block type-wind">
+      <div class="block-time">11:00 PM</div>
+      <div class="block-content">
+        <div class="block-title">Wind Down</div>
+        <div class="block-detail">PM supplements. Midnight sleep even on Saturdays keeps Sunday functional.</div>
+      </div>
+      <div class="block-tag"><span class="tag tag-wind">Wind Down</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ NON-NEGOTIABLES ============ -->
+<div class="section" id="rules">
+  <div class="section-title"><span class="num">02</span> Non-Negotiables</div>
+  <div class="section-intro">The handful of rules that hold the whole system together. When everything else slips, these don't.</div>
+  <div class="rules-grid">
+    <div class="rule-card"><div class="rule-emoji">🔴</div><div class="rule-text"><strong>Hard stop at 10pm</strong>Set an actual alarm. Close the laptop regardless of what's unfinished. Content ends at 10pm, wind down begins — no exceptions.</div></div>
+    <div class="rule-card"><div class="rule-emoji">☀️</div><div class="rule-text"><strong>Sunlight within 10 min of waking</strong>Step outside, no sunglasses. The single most impactful habit for resetting circadian rhythm and making 7am sustainable.</div></div>
+    <div class="rule-card"><div class="rule-emoji">☕</div><div class="rule-text"><strong>No coffee before 9am</strong>Wait ~2hrs after waking. Cortisol peaks naturally first thing — caffeine on top builds tolerance fast and worsens the afternoon crash.</div></div>
+    <div class="rule-card"><div class="rule-emoji">📵</div><div class="rule-text"><strong>Devices out of bedroom every night</strong>Phone in the kitchen. The behavioral barrier is more powerful than any sleep supplement.</div></div>
+    <div class="rule-card"><div class="rule-emoji">🚶</div><div class="rule-text"><strong>5pm walk is protected time</strong>Laptop closed, no exceptions. Mental reset is part of the system, not a reward. You perform better the next day for it.</div></div>
+    <div class="rule-card"><div class="rule-emoji">📅</div><div class="rule-text"><strong>Saturday content done by 2pm</strong>Three platforms, finished. The rest of the day belongs to Rome and living your life — no guilt, no laptop.</div></div>
+  </div>
+</div>
+
+<!-- ============ TRAINING ============ -->
+<div class="section" id="training">
+  <div class="section-title"><span class="num">03</span> Training Program</div>
+  <div class="section-intro">The 5-day split (V3) — strength-focused, 4 exercises per day, ~60 min per session including prehab and abs. Rehab guardrails fully intact for the left shoulder/collarbone, levator scapulae, lower back, and left ankle. The daily prehab protocol runs before every session and on off days.</div>
+
+  <div class="card d1">
+    <div class="card-head"><div class="card-num">01</div><div class="card-titles"><div class="card-label">Day One</div><div class="card-title">Pull + Posterior Chain</div></div><div class="card-focus">Back &amp; Posture</div></div>
+    <table>
+      <thead><tr><th>Exercise</th><th>Sets</th><th>Reps</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td><div class="ex-name">Face Pulls</div><div class="ex-note">Cable, neutral grip — king of posture work and shoulder longevity</div></td><td class="sets">4</td><td class="reps">15–20</td><td><span class="t2 t-rehab">Rehab</span></td></tr>
+        <tr><td><div class="ex-name">Single Arm Dumbbell Row</div><div class="ex-note">Chest on incline bench — removes all lower back load, pure back strength</div></td><td class="sets">4</td><td class="reps">10–12 ea</td><td><span class="t2 t-strength">Strength</span></td></tr>
+        <tr><td><div class="ex-name">Lat Pulldown (wide grip)</div><div class="ex-note">Width builder — full stretch at top, hard squeeze at bottom</div></td><td class="sets">3</td><td class="reps">10–12</td><td><span class="t2 t-strength">Strength</span></td></tr>
+        <tr><td><div class="ex-name">Band Pull-Aparts</div><div class="ex-note">Superset with face pulls or standalone finisher — rear delt and posture</div></td><td class="sets">3</td><td class="reps">20</td><td><span class="t2 t-rehab">Rehab</span></td></tr>
+      </tbody>
+    </table>
+    <div class="card-note"><strong>Abs:</strong> Hanging leg raises w/ twist · Cable wood chops · Hollow holds — 3 sets each, controlled. <strong>No barbell rows</strong> — too much levator scapulae involvement with your neck history. Single arm rows with chest support take the strain off completely.</div>
+  </div>
+
+  <div class="card d2">
+    <div class="card-head"><div class="card-num">02</div><div class="card-titles"><div class="card-label">Day Two</div><div class="card-title">Hips, Glutes &amp; Ankle Rehab</div></div><div class="card-focus">Most Important Day</div></div>
+    <table>
+      <thead><tr><th>Exercise</th><th>Sets</th><th>Reps</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td><div class="ex-name">Romanian Deadlift</div><div class="ex-note">Hip hinge pattern — builds posterior chain without spinal compression</div></td><td class="sets">4</td><td class="reps">10–12</td><td><span class="t2 t-strength">Strength</span></td></tr>
+        <tr><td><div class="ex-name">Bulgarian Split Squat</div><div class="ex-note">Unilateral — directly targets left ankle weakness. Elevate heel slightly if unstable</div></td><td class="sets">3</td><td class="reps">8–10 ea</td><td><span class="t2 t-strength">Strength</span></td></tr>
+        <tr><td><div class="ex-name">Hip Thrust</div><div class="ex-note">Direct glute work — underrated for hip stability and lower back health</div></td><td class="sets">3</td><td class="reps">12–15</td><td><span class="t2 t-strength">Strength</span></td></tr>
+        <tr><td><div class="ex-name">Hip Flexor Machine + Calf Raises (superset)</div><div class="ex-note">Hip flexor strength + ankle rehab in one block — two problems, one set</div></td><td class="sets">3</td><td class="reps">12 + 15</td><td><span class="t2 t-rehab">Rehab</span></td></tr>
+      </tbody>
+    </table>
+    <div class="card-note"><strong>Abs:</strong> Side plank w/ hip dips · Ab wheel rollouts · Reverse crunches — 3 sets each. Drop weight on weeks the ankle is louder than usual. The split squat is the most important exercise in the whole program for rebuilding that left ankle — don't rush the load.</div>
+  </div>
+
+  <div class="card d3">
+    <div class="card-head"><div class="card-num">03</div><div class="card-titles"><div class="card-label">Day Three</div><div class="card-title">Push + Shoulder Health</div></div><div class="card-focus">Press &amp; Stability</div></div>
+    <table>
+      <thead><tr><th>Exercise</th><th>Sets</th><th>Reps</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td><div class="ex-name">Incline Dumbbell Press</div><div class="ex-note">Dumbbells over barbell — greater range of motion, less shoulder impingement</div></td><td class="sets">4</td><td class="reps">8–10</td><td><span class="t2 t-strength">Strength</span></td></tr>
+        <tr><td><div class="ex-name">Landmine Press</div><div class="ex-note">Shoulder-friendly pressing angle — great for the levator scapulae and left collarbone area</div></td><td class="sets">3</td><td class="reps">10 ea</td><td><span class="t2 t-rehab">Rehab</span></td></tr>
+        <tr><td><div class="ex-name">Cable Lateral Raises</div><div class="ex-note">Constant tension over dumbbells — side delt strength with less cheating</div></td><td class="sets">3</td><td class="reps">15</td><td><span class="t2 t-strength">Strength</span></td></tr>
+        <tr><td><div class="ex-name">Serratus Wall Slides</div><div class="ex-note">Arms on wall, slide up — directly fixes shoulder blade control and the serratus/levator imbalance</div></td><td class="sets">3</td><td class="reps">12</td><td><span class="t2 t-rehab">Rehab</span></td></tr>
+      </tbody>
+    </table>
+    <div class="card-note"><strong>Abs:</strong> Hanging knee raises · Pallof press · Bicycle crunches — 3 sets each. <strong>Serratus wall slides are non-negotiable</strong> — your left shoulder/collarbone issue is partly a serratus anterior weakness problem. This exercise directly addresses that over time.</div>
+  </div>
+
+  <div class="card d4">
+    <div class="card-head"><div class="card-num">04</div><div class="card-titles"><div class="card-label">Day Four</div><div class="card-title">Core &amp; Lower Back Resilience</div></div><div class="card-focus">Spine Health</div></div>
+    <table>
+      <thead><tr><th>Exercise</th><th>Sets</th><th>Reps</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td><div class="ex-name">Pallof Press (cable)</div><div class="ex-note">Anti-rotation core — teaches the spine to resist force, not create it</div></td><td class="sets">3</td><td class="reps">12 ea</td><td><span class="t2 t-core">Core</span></td></tr>
+        <tr><td><div class="ex-name">McGill Side Plank</div><div class="ex-note">Elbow on floor, top leg forward — hold 30–45s, build to 60s</div></td><td class="sets">3</td><td class="reps">30–60s ea</td><td><span class="t2 t-rehab">Rehab</span></td></tr>
+        <tr><td><div class="ex-name">Hanging Knee Raises or Ab Wheel</div><div class="ex-note">Full anterior core — pick based on what's available</div></td><td class="sets">3</td><td class="reps">12–15</td><td><span class="t2 t-core">Core</span></td></tr>
+        <tr><td><div class="ex-name">Reverse Hypers or Back Extensions (bodyweight only)</div><div class="ex-note">Low back endurance without compression — no added weight, slow and deliberate</div></td><td class="sets">3</td><td class="reps">15</td><td><span class="t2 t-rehab">Rehab</span></td></tr>
+      </tbody>
+    </table>
+    <div class="card-note"><strong>Abs (light/rehab):</strong> McGill curl-up · Bird dog w/ extended hold · Dead bug — 3 sets each, 8 reps per side. This is your most underrated day. A strong, resilient core is the single biggest thing protecting your lower back long term.</div>
+  </div>
+
+  <div class="card d5">
+    <div class="card-head"><div class="card-num">05</div><div class="card-titles"><div class="card-label">Day Five</div><div class="card-title">Arms + Neck &amp; Upper Trap Deload</div></div><div class="card-focus">CNS Recovery</div></div>
+    <table>
+      <thead><tr><th>Exercise</th><th>Sets</th><th>Reps</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td><div class="ex-name">Hammer Curls</div><div class="ex-note">Neutral grip — trains brachialis and forearm alongside the bicep</div></td><td class="sets">3</td><td class="reps">12</td><td><span class="t2 t-strength">Strength</span></td></tr>
+        <tr><td><div class="ex-name">Tricep Rope Pushdown</div><div class="ex-note">Cable, full range — elbows stay fixed throughout</div></td><td class="sets">3</td><td class="reps">15</td><td><span class="t2 t-strength">Strength</span></td></tr>
+        <tr><td><div class="ex-name">Preacher Curl (machine or cable)</div><div class="ex-note">Isolates the bicep completely — removes shoulder involvement from the movement</div></td><td class="sets">3</td><td class="reps">12</td><td><span class="t2 t-strength">Strength</span></td></tr>
+        <tr><td><div class="ex-name">Neck Isometrics + Trap Stretch Circuit</div><div class="ex-note">4 directions × 10s holds — levator scapulae and upper trap. Cheap insurance that keeps everything else healthy</div></td><td class="sets">2</td><td class="reps">10s × 4</td><td><span class="t2 t-rehab">Rehab</span></td></tr>
+      </tbody>
+    </table>
+    <div class="card-note"><strong>Abs:</strong> Dragon flag progressions · Wipers · Sitting twists w/ weight — 3 sets each. Day 5 is intentionally the lightest session — your CNS needs it after four demanding days. Neck isometrics stay as cheap insurance against the levator scapulae issue returning.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-titles"><div class="card-label">Every Session + Off Days · 15–20 min</div><div class="card-title">Daily Prehab Protocol</div></div></div>
+    <div style="padding: 20px 24px;">
+      <div class="prehab-grid">
+        <div class="prehab-col">
+          <h4>🦵 Hips, Groin & Ankle</h4>
+          <div class="prehab-item"><span>90/90 Hip Stretch</span><span class="dur">60s ea</span></div>
+          <div class="prehab-item"><span>Couch Stretch (hip flexor)</span><span class="dur">60s ea</span></div>
+          <div class="prehab-item"><span>Adductor Rockback</span><span class="dur">10 slow</span></div>
+          <div class="prehab-item"><span>Banded Ankle Mobilization</span><span class="dur">15 ea</span></div>
+          <div class="prehab-item"><span>Single Leg Balance (eyes closed)</span><span class="dur">30–60s ea</span></div>
+        </div>
+        <div class="prehab-col">
+          <h4>🔝 Upper Back, Neck & Spine</h4>
+          <div class="prehab-item"><span>Levator Scapulae Stretch</span><span class="dur">45s ea</span></div>
+          <div class="prehab-item"><span>Thoracic Rotation (quadruped)</span><span class="dur">10 ea</span></div>
+          <div class="prehab-item"><span>Cat-Cow</span><span class="dur">10 slow</span></div>
+          <div class="prehab-item"><span>Dead Bug</span><span class="dur">8 ea</span></div>
+          <div class="prehab-item"><span>Bird Dog</span><span class="dur">8 ea</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-note">The shoulder is fixed because this work fixed it — don't let size goals push it out. Ankle balance work matters even more now given the half-marathon volume. The two most important: ankle balance + levator scapulae stretch.</div>
+  </div>
+</div>
+
+<!-- ============ NUTRITION ============ -->
+<div class="section" id="nutrition">
+  <div class="section-title"><span class="num">04</span> Food & Nutrition</div>
+  <div class="section-intro">Cheap, clean, consistent — that's the whole strategy. Priority order: (1) consistent wake + morning light, (2) rebalance carbs toward whole grains earlier in the day, (3) close the fruit & vegetable gap. Visible abs come down to body fat, which falls out of doing these well — no crash dieting given the training volume.</div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-titles"><div class="card-label">Benefits & When To Eat</div><div class="card-title">Master Food List</div></div></div>
+    <table>
+      <thead><tr><th>Food</th><th>Why</th><th>When</th></tr></thead>
+      <tbody>
+        <tr><td><div class="ex-name">Eggs</div></td><td><div class="ex-note">Complete protein, high tryptophan, B vitamins for energy. One of the most complete foods available</div></td><td class="timing-col">Breakfast / lunch</td></tr>
+        <tr><td><div class="ex-name">Oats</div></td><td><div class="ex-note">Complex carb, melatonin precursors, slow-release energy without spikes</div></td><td class="timing-col">Morning / ~1hr pre-bed</td></tr>
+        <tr><td><div class="ex-name">Whole grain rice / pasta</div></td><td><div class="ex-note">Complex carb without the refined-carb crash — go whole grain going forward</div></td><td class="timing-col">Lunch / early dinner</td></tr>
+        <tr><td><div class="ex-name">Lentils & chickpeas</div></td><td><div class="ex-note">Cheap plant protein, complex carbs, magnesium, iron. Small amount of copper too. Filling per euro</div></td><td class="timing-col">Lunch / dinner</td></tr>
+        <tr><td><div class="ex-name">Sardines & canned tuna</div></td><td><div class="ex-note">Cheap omega-3s that compound the fish oil, high protein, vitamin D</div></td><td class="timing-col">Lunch / early dinner</td></tr>
+        <tr><td><div class="ex-name">Chicken thighs</div></td><td><div class="ex-note">Cheaper than breast, more zinc and iron, good recovery protein</div></td><td class="timing-col">Lunch / dinner, 2hrs+ pre-bed</td></tr>
+        <tr><td><div class="ex-name">Spinach & dark greens</div></td><td><div class="ex-note">Magnesium (compounds supplement), iron, folate, antioxidants. Add to anything</div></td><td class="timing-col">Any meal</td></tr>
+        <tr><td><div class="ex-name">Bananas & citrus</div></td><td><div class="ex-note">Potassium, magnesium, vitamin C — cheap in Rome year-round</div></td><td class="timing-col">Morning / pre or post-workout</td></tr>
+        <tr><td><div class="ex-name">Frozen berries</div></td><td><div class="ex-note">Cheaper than fresh, same antioxidants — add to oats or eat plain</div></td><td class="timing-col">Morning / snack</td></tr>
+        <tr><td><div class="ex-name">Carrots, celery, cucumber</div></td><td><div class="ex-note">Low calorie, high water, genuine crunch-snack replacement</div></td><td class="timing-col">Snack, any time</td></tr>
+        <tr><td><div class="ex-name">Bell peppers, zucchini, tomatoes</div></td><td><div class="ex-note">Cheap and in-season in Italy — vitamin C, fiber, color on the plate</div></td><td class="timing-col">Lunch / dinner</td></tr>
+        <tr><td><div class="ex-name">Pumpkin seeds</div></td><td><div class="ex-note">One of the best plant zinc sources, plus magnesium. Good cracker-snack replacement</div><span class="t2 t-zinc" style="margin-top:4px">Zinc</span></td><td class="timing-col">Snack, any time</td></tr>
+        <tr><td><div class="ex-name">Cashews</div></td><td><div class="ex-note">Dual-purpose: contributes to both zinc and copper. Portion control — calorie dense</div><span class="t2 t-zinc" style="margin-top:4px">Zinc + Copper</span></td><td class="timing-col">Small handful, snack</td></tr>
+        <tr><td><div class="ex-name">Dark chocolate / cacao</div></td><td><div class="ex-note">Useful copper source — balances zinc supplementation over time</div><span class="t2 t-zinc" style="margin-top:4px">Copper</span></td><td class="timing-col">Small square, daytime</td></tr>
+        <tr><td><div class="ex-name">Walnuts & almonds</div></td><td><div class="ex-note">Melatonin, magnesium, healthy fats, tryptophan. Small handful only</div></td><td class="timing-col">Evening snack</td></tr>
+        <tr><td><div class="ex-name">Warm milk</div></td><td><div class="ex-note">Calcium + tryptophan + warmth promotes sleep onset. Old-fashioned but effective</div></td><td class="timing-col">~30 min before bed</td></tr>
+        <tr><td><div class="ex-name">Chamomile tea</div></td><td><div class="ex-note">Apigenin binds GABA receptors — genuinely relaxing, ~€1 a box</div></td><td class="timing-col">30–60 min before bed</td></tr>
+        <tr><td><div class="ex-name">Water</div></td><td><div class="ex-note">Cognition, energy, recovery, sleep, creatine effectiveness. Rome tap is great to drink — fill a steel bottle, stop buying plastic</div></td><td class="timing-col">3–3.5L daily, more on gym days</td></tr>
+      </tbody>
+    </table>
+    <div class="card-note"><strong>Cut back:</strong> refined white pasta/bread/pizza at dinner specifically (fine at lunch/post-workout when you can use the glucose). Crackers, wafers, cheese as default snacks are the bigger fix — empty calories feeding the energy crash. <strong>Note on Rome water:</strong> excellent to drink, but it's hard (high mineral) — that's why it matters for skin (see Skincare), not for drinking.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-titles"><div class="card-label">You're a snacker — change what's in reach, not the habit</div><div class="card-title">Snack Swaps</div></div></div>
+    <div class="swap-row"><div class="swap-old">Crackers + cheese</div><div class="swap-arrow">→</div><div class="swap-new">Carrots, celery, cucumber + hummus<div class="sn">Same crunch, real fiber instead of empty calories</div></div></div>
+    <div class="swap-row"><div class="swap-old">Wafers / cookies</div><div class="swap-arrow">→</div><div class="swap-new">Frozen berries or a banana<div class="sn">Satisfies the sweet craving, actual micronutrients</div></div></div>
+    <div class="swap-row"><div class="swap-old">Mindless cheese snacking</div><div class="swap-arrow">→</div><div class="swap-new">Pumpkin seeds or cashews<div class="sn">Doubles as your zinc source — portion into small bags</div></div></div>
+    <div class="swap-row"><div class="swap-old">Boredom snacking</div><div class="swap-arrow">→</div><div class="swap-new">Citrus or an apple<div class="sn">Keep a bowl visible so it's the easy option</div></div></div>
+    <div class="card-note"><strong>The actual fix:</strong> not willpower, it's what's physically in the kitchen. Buy the swaps instead of the crackers and the habit changes itself.</div>
+  </div>
+
+  <div class="sub-title">Zinc & Copper Balance</div>
+  <div class="two-col">
+    <div class="notes-block">
+      <div class="notes-head"><h3>Zinc</h3></div>
+      <div class="note-item"><strong>RDA ~11mg/day</strong> for adult men. Upper limit ~40mg from all sources combined</div>
+      <div class="note-item">Supports testosterone, immune function, skin healing, muscle recovery — easy to under-hit on carb-heavy diets</div>
+      <div class="note-item">From food: eggs (~1.1mg/2), lentils (~2.5mg/cup), pumpkin seeds (~2.2mg/oz) → roughly 5–6mg/day from your usual foods</div>
+      <div class="note-item"><strong>Supplement:</strong> 15mg picolinate or bisglycinate, with food in the AM. Lands total ~20–21mg/day — comfortably mid-range</div>
+    </div>
+    <div class="notes-block">
+      <div class="notes-head"><h3>Copper</h3></div>
+      <div class="note-item"><strong>RDA ~0.9mg/day.</strong> Zinc and copper compete for absorption — sustained zinc dosing can deplete copper over months</div>
+      <div class="note-item">Sources already in your diet: cashews, sesame, lentils/chickpeas, dark chocolate, whole grains</div>
+      <div class="note-item">Healthy ratio for supplementers ~8–15:1 zinc:copper — keeping copper foods in rotation covers this</div>
+      <div class="note-item">If you get bloodwork, check copper alongside zinc once you've been supplementing a few months</div>
+    </div>
+  </div>
+
+  <div class="sub-title">Avoid Before Bed</div>
+  <div class="avoid-grid">
+    <div class="avoid-card"><div class="avoid-name">Heavy protein meals</div><div class="avoid-reason">Takes energy to digest, keeps your system activated when it should wind down. Save big protein for lunch/early dinner.</div></div>
+    <div class="avoid-card"><div class="avoid-name">Alcohol</div><div class="avoid-reason">Helps you fall asleep but destroys quality in the second half of the night. Suppresses REM. You wake unrestored.</div></div>
+    <div class="avoid-card"><div class="avoid-name">Spicy or very fatty food</div><div class="avoid-reason">Raises core temperature and causes reflux. Your body needs to cool to initiate deep sleep — this fights it.</div></div>
+    <div class="avoid-card"><div class="avoid-name">Caffeine after 2pm</div><div class="avoid-reason">5–6hr half-life means a 3pm espresso still has half its caffeine at 8pm. Delays sleep onset significantly.</div></div>
+  </div>
+</div>
+
+<!-- ============ MEAL TIMING ============ -->
+<div class="section" id="meals">
+  <div class="section-title"><span class="num">05</span> Meal Timing & Daily Anchors</div>
+  <div class="section-intro">Fasted until noon, ~8–9hr eating window. Each meal has to be a real meal — under-eating at noon undercuts the whole day's energy, and the fasting window must not quietly become overall under-eating given the training load.</div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-titles"><div class="card-label">7AM wake · fasted until noon</div><div class="card-title">A Day of Eating</div></div></div>
+    <div class="flow-item"><div class="flow-time">9:00 AM</div><div><div class="flow-title">Coffee — still fasted</div><div class="flow-desc">Black, or a splash of milk. Good window for morning light + prehab since you're not tied to a meal.</div></div></div>
+    <div class="flow-item"><div class="flow-time">12:00 PM</div><div><div class="flow-title">Meal 1 — the biggest one</div><div class="flow-desc">Main fuel-up after ~17hrs fasted, substantial not light. Eggs/chicken thighs + whole grain carb + a vegetable. Best window for citrus/berries and any guilty-pleasure carbs.</div></div></div>
+    <div class="flow-item"><div class="flow-time">3:00–3:30 PM</div><div><div class="flow-title">Snack — bridges to training</div><div class="flow-desc">Pumpkin seeds or cashews, or carrots/cucumber + hummus. A small carb (banana) if training at 5pm.</div></div></div>
+    <div class="flow-item"><div class="flow-time">5:00–7:30 PM</div><div><div class="flow-title">Training window</div><div class="flow-desc">Finish by ~7:30pm for a real buffer before wind-down. Evening training is fine — the buffer is what matters.</div></div></div>
+    <div class="flow-item"><div class="flow-time">7:30–8:00 PM</div><div><div class="flow-title">Meal 2 — post-training protein</div><div class="flow-desc">Chicken, fish, or lean beef + vegetable-heavy side. Lighter on dense carbs than noon, but don't under-eat — this is recovery.</div></div></div>
+    <div class="flow-item"><div class="flow-time">8:30–9:00 PM</div><div><div class="flow-title">Light final bite — if needed</div><div class="flow-desc">Skip if satisfied. If not, small oats/banana or fruit fits the 3-hour-before-bed buffer.</div></div></div>
+    <div class="flow-item"><div class="flow-time">9:00 PM</div><div><div class="flow-title">Eating window closes</div><div class="flow-desc">Wind-down begins, no more food.</div></div></div>
+  </div>
+
+  <div class="callout"><strong>Sleep math:</strong> 7:00am wake with a 7–7.5hr need means lights out 11:30pm–12:00am. 11:30 is the real target, midnight the hard ceiling. Treat bedtime as seriously as wake time — one without the other anchors nothing.</div>
+</div>
+
+<!-- ============ SKINCARE ============ -->
+<div class="section" id="skincare">
+  <div class="section-title"><span class="num">06</span> Skincare</div>
+  <div class="section-intro">Skin is generally clean — the goal is consistency and one targeted addition (BHA), not an overhaul, and definitely not Accutane. Occasional breakouts despite a clean routine are normal, not a routine failure.</div>
+
+  <div class="callout"><strong>Weekly night rotation:</strong> Retinol 2–3 nights/week (e.g. Mon/Wed/Fri). BHA exfoliant 2 nights/week on separate nights (e.g. Tue/Sat). Peptide serum all other nights. Never combine retinol, BHA, and peptide serum on the same night — one active per evening, always followed by the rich ceramide moisturizer.</div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--skin)"></div> Skincare</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--supp)"></div> Supplement (see Supplements)</div>
+  </div>
+
+  <div class="step-cols">
+    <div class="step-block sh-am">
+      <div class="step-head"><span class="em">☀️</span><span class="lbl">Morning</span></div>
+      <div class="step"><div class="step-dot sd-skin"></div><div><div class="step-name">CeraVe Foaming Cleanser</div><div class="step-detail">Lukewarm water, not hot</div><span class="step-badge b-skin">Skincare</span></div></div>
+      <div class="step"><div class="step-dot sd-skin"></div><div><div class="step-name">Peptide Serum</div><div class="step-detail">The Ordinary Multi-Peptide + HA — 2–3 drops</div><span class="step-badge b-skin">Skincare</span></div></div>
+      <div class="step"><div class="step-dot sd-skin"></div><div><div class="step-name">Lightweight Moisturizer</div><div class="step-detail">The Ordinary NMF + Beta Glucan — light tube</div><span class="step-badge b-skin">Skincare</span></div></div>
+      <div class="step"><div class="step-dot sd-skin"></div><div><div class="step-name">SPF 50+ Sunscreen</div><div class="step-detail">La Roche-Posay Anthelios UVMune 400 — LAST step, every day</div><span class="step-badge b-always">Non-Negotiable</span></div></div>
+    </div>
+    <div class="step-block sh-mid">
+      <div class="step-head"><span class="em">🌤</span><span class="lbl">Daytime</span></div>
+      <div class="step"><div class="step-dot sd-skin"></div><div><div class="step-name">Reapply SPF (if outdoors)</div><div class="step-detail">Every 2hrs in direct sun</div><span class="step-badge b-alt">If In Sun</span></div></div>
+      <div class="step"><div class="step-dot sd-skin"></div><div><div class="step-name">No face touching</div><div class="step-detail">Wipe phone screen. Don't rest chin/cheek on hands</div><span class="step-badge b-always">Habit</span></div></div>
+      <div class="step"><div class="step-dot sd-skin"></div><div><div class="step-name">Pillowcase</div><div class="step-detail">Change every 2 days — cheap lever if breakouts persist</div><span class="step-badge b-always">Habit</span></div></div>
+    </div>
+    <div class="step-block sh-pm">
+      <div class="step-head"><span class="em">🌙</span><span class="lbl">Evening</span></div>
+      <div class="step"><div class="step-dot sd-skin"></div><div><div class="step-name">CeraVe Foaming Cleanser</div><div class="step-detail">Lukewarm water before any products</div><span class="step-badge b-skin">Skincare</span></div></div>
+      <div class="step"><div class="step-dot sd-skin"></div><div><div class="step-name">Active — Retinol / BHA / Peptide</div><div class="step-detail">Per rotation above. Retinal 0.2% · Salicylic Acid 2% · or peptide. One only</div><span class="step-badge b-alt">Rotate</span></div></div>
+      <div class="step"><div class="step-dot sd-skin"></div><div><div class="step-name">Rich Night Moisturizer</div><div class="step-detail">The Ordinary NMF + PhytoCeramides — thickest tube, seals everything</div><span class="step-badge b-skin">Skincare</span></div></div>
+    </div>
+  </div>
+
+  <div class="two-col" style="margin-top:24px">
+    <div class="notes-block">
+      <div class="notes-head"><h3>🏙️ Beyond The Routine</h3></div>
+      <div class="note-item">Rome's water is hard (high mineral) — can leave residue that clogs pores even with consistent cleansing. The BHA addresses this directly</div>
+      <div class="note-item">Metro/crowds aren't the issue — city pollution/grime over the day is, already handled by the evening cleanse</div>
+      <div class="note-item">Sweat + phone + hands are the high-touch points — keep minimizing face touching</div>
+      <div class="note-item">Bump pillowcase to every 2 days if breakouts persist</div>
+    </div>
+    <div class="notes-block">
+      <div class="notes-head"><h3>🔍 Why You Still Break Out</h3></div>
+      <div class="note-item">Skincare manages skin — it doesn't override hormonal cycles. Occasional breakouts are normal</div>
+      <div class="note-item">Heavy products on nights skin doesn't need them can irritate the barrier — more isn't always better</div>
+      <div class="note-item">Pimple patches only work on active whiteheads with material in them — not useful if you don't get classic pimples</div>
+      <div class="note-item"><strong>Milia (white dots):</strong> retinol breaks them down over 6–8 weeks. Don't squeeze. The wait is the timeline, not failure</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SUPPLEMENTS ============ -->
+<div class="section" id="supplements">
+  <div class="section-title"><span class="num">07</span> Supplements</div>
+  <div class="section-intro">The full stack, split by timing. Fat-soluble ones (D3+K2, omega-3) need food to absorb. Give supplements 6–8 weeks before judging effects.</div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-titles"><div class="card-label">Take with first meal / food</div><div class="card-title">Morning Stack</div></div></div>
+    <table>
+      <thead><tr><th>Supplement</th><th>Dose & Notes</th></tr></thead>
+      <tbody>
+        <tr><td><div class="ex-name">Creatine Monohydrate</div></td><td><div class="ex-note">Bandini Creapure — 3–5g in water or any drink. Any time of day, just be consistent. Drink 3–3.5L water</div></td></tr>
+        <tr><td><div class="ex-name">Vitamin D3 + K2</div></td><td><div class="ex-note">AAVALABS — 1 capsule with food (fat-soluble, needs food to absorb)</div></td></tr>
+        <tr><td><div class="ex-name">Omega-3 Fish Oil</div></td><td><div class="ex-note">WeightWorld — 1 serving with food (660mg EPA + 440mg DHA)</div></td></tr>
+        <tr><td><div class="ex-name">Zinc</div></td><td><div class="ex-note">15mg picolinate or bisglycinate, with food. Lands total ~20–21mg/day with diet. Keep copper foods in rotation</div><span class="t2 t-zinc" style="margin-top:4px">New</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-titles"><div class="card-label">30–60 min before bed</div><div class="card-title">Evening Stack</div></div></div>
+    <table>
+      <thead><tr><th>Supplement</th><th>Dose & Notes</th></tr></thead>
+      <tbody>
+        <tr><td><div class="ex-name">Magnesium Glycinate</div></td><td><div class="ex-note">Solaray — 300–400mg, 30–60 min before bed. Improves sleep quality</div></td></tr>
+        <tr><td><div class="ex-name">Ashwagandha KSM-66</div></td><td><div class="ex-note">WeightWorld — 1 tablet with magnesium. Lowers cortisol, supports sleep. Taken together for compounding effect</div></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout accent"><strong>Bloodwork pending:</strong> a blood panel would replace guesswork on zinc, copper, vitamin D, and more — worth doing when you can. It's the one thing that turns "probably fine" into actual numbers.</div>
+</div>
+
+<div class="footer">
+  <span>David — Rome 2026</span>
+  <span>Cheap, clean, consistent. Build the foundation — the rest follows.</span>
+</div>
+
+</div>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(reg => console.log('SW registered:', reg.scope))
+          .catch(err => console.log('SW error:', err));
+      });
+    }
+  </script>
+</body>
+</html>
