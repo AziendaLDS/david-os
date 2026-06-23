@@ -63,6 +63,12 @@
     gap: 8px;
     flex-wrap: wrap;
   }
+  .topnav-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
   .topnav .brand {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 20px;
@@ -313,86 +319,118 @@
   /* ── MOBILE ───────────────────────────────────────────── */
   @media (max-width: 600px) {
 
-    /* Nav */
-    .nav-inner { gap: 6px; padding: 10px 12px; flex-wrap: wrap; }
-    .nav-link { font-size: 9px; padding: 4px 8px; letter-spacing: 1px; }
+    /* 1. NAV — brand left-aligned, links wrap below */
+    .topnav { padding: 10px 14px; }
+    .topnav-inner {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .topnav .brand { font-size: 18px; margin-right: 0; margin-bottom: 2px; }
+    .topnav-links { display: flex; flex-wrap: wrap; gap: 6px; }
+    .topnav a { font-size: 9px; padding: 4px 8px; letter-spacing: 1px; }
+
+    /* Hero — left align meta */
+    .page-header { padding: 28px 0 20px; flex-direction: column; align-items: flex-start; gap: 8px; }
+    .page-header .meta { text-align: left; font-size: 10px; line-height: 1.8; }
 
     /* Wrap */
     .wrap { padding: 0 14px; }
 
-    /* Hero */
-    .hero { padding: 32px 0 20px; }
-
-    /* Section title */
+    /* Section */
     .section-title { font-size: 22px; }
     .section-intro { font-size: 12px; }
 
     /* Schedule blocks */
-    .block { grid-template-columns: 80px 1fr; }
-    .block-time { font-size: 11px; padding: 10px 10px; }
+    .block { grid-template-columns: 76px 1fr; }
+    .block-time { font-size: 10px; padding: 10px 8px; letter-spacing: 0; }
     .block-content { padding: 10px 12px; }
     .block-title { font-size: 13px; }
     .block-detail { font-size: 11px; }
     .block-tag { display: none; }
 
-    /* Cards (workout) */
-    .card-head { padding: 14px 14px; flex-wrap: wrap; gap: 8px; }
-    .card-num { font-size: 32px; }
-    .card-title { font-size: 18px; }
-    .card-focus { font-size: 9px; padding: 3px 7px; }
+    /* 2. WORKOUT CARDS — exercise rows stack cleanly, tag right */
+    .card-head { padding: 12px 14px; gap: 8px; }
+    .card-num { font-size: 30px; }
+    .card-title { font-size: 17px; }
+    .card-focus { font-size: 9px; padding: 3px 7px; white-space: nowrap; }
     .card-note { padding: 12px 14px; font-size: 11px; }
 
-    /* Tables — stack into cards on mobile */
     table { display: block; }
     thead { display: none; }
     tbody { display: block; }
     tr {
-      display: block;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
       padding: 12px 14px;
       border-bottom: 1px solid #1e1e1e;
+      gap: 4px;
     }
     tr:last-child { border-bottom: none; }
-    td {
+
+    /* Exercise name cell — full width */
+    td:first-child {
       display: block;
-      padding: 0;
+      width: 100%;
+      padding: 0 0 4px 0;
       border: none;
       font-size: 13px;
     }
-    td.sets::before { content: "Sets: "; color: #555; font-size: 11px; }
-    td.reps::before { content: "Reps: "; color: #555; font-size: 11px; }
+    /* Sets + Reps inline */
     td.sets, td.reps {
       display: inline;
-      margin-right: 12px;
-      font-size: 12px;
+      padding: 0;
+      border: none;
+      font-size: 11px;
     }
-    td:last-child { margin-top: 6px; }
+    td.sets { color: #555; margin-right: 2px; }
+    td.sets::after { content: " ·"; color: #333; margin-right: 6px; }
+    td.reps { font-weight: 500; color: #f0f0f0; margin-right: 8px; }
+    /* Tag badge — pushed to the right on same line as sets/reps */
+    td:last-child {
+      display: inline;
+      padding: 0;
+      border: none;
+      margin-left: auto;
+    }
     th { display: none; }
 
     /* Flow (meal timing) */
-    .flow-item { flex-direction: column; gap: 4px; padding: 14px 14px; }
-    .flow-time { font-size: 16px; min-width: unset; }
+    .flow-item { flex-direction: column; gap: 3px; padding: 12px 14px; }
+    .flow-time { font-size: 15px; min-width: unset; white-space: normal; }
     .flow-title { font-size: 13px; }
     .flow-desc { font-size: 11px; }
 
-    /* Swap rows */
-    .swap-row { flex-direction: column; gap: 4px; padding: 12px 14px; }
-    .swap-old { font-size: 12px; }
+    /* 3. SWAP ROWS — left-aligned stack */
+    .swap-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+      padding: 12px 14px;
+      text-align: left;
+    }
+    .swap-old { flex: none; font-size: 12px; color: #555; }
     .swap-arrow { display: none; }
-    .swap-new { font-size: 12px; }
-    .swap-new::before { content: "→ "; color: #c8f135; }
+    .swap-new { flex: none; font-size: 13px; color: #f0f0f0; }
+    .swap-new::before { content: "→ "; color: #c8f135; font-weight: 500; }
+    .swap-new .sn { font-size: 11px; color: #555; margin-top: 2px; }
 
     /* Prehab */
     .prehab-grid { grid-template-columns: 1fr; }
     .prehab-item { font-size: 13px; }
 
-    /* Supplement / skincare step cols */
-    .step-cols { grid-template-columns: 1fr; }
+    /* 4. SUPPLEMENTS — tighter step rows */
+    .step-cols { grid-template-columns: 1fr; gap: 12px; }
+    .step { padding: 10px 14px; gap: 8px; }
+    .step-name { font-size: 13px; }
+    .step-detail { font-size: 11px; }
+    .step-head { padding: 12px 14px; }
+
+    /* Other grids */
     .two-col { grid-template-columns: 1fr; }
     .avoid-grid { grid-template-columns: 1fr; }
     .rules-grid { grid-template-columns: 1fr; }
-
-    /* Food table */
-    .card-head { flex-wrap: wrap; }
 
     /* Footer */
     .footer { flex-direction: column; gap: 6px; font-size: 9px; }
@@ -405,13 +443,15 @@
 <div class="topnav">
   <div class="topnav-inner">
     <span class="brand">DAVID OS</span>
-    <a href="#schedule">Schedule</a>
-    <a href="#rules">Non-Negotiables</a>
-    <a href="#training">Training</a>
-    <a href="#nutrition">Nutrition</a>
-    <a href="#meals">Meal Timing</a>
-    <a href="#skincare">Skincare</a>
-    <a href="#supplements">Supplements</a>
+    <div class="topnav-links">
+      <a href="#schedule">Schedule</a>
+      <a href="#rules">Non-Negotiables</a>
+      <a href="#training">Training</a>
+      <a href="#nutrition">Nutrition</a>
+      <a href="#meals">Meal Timing</a>
+      <a href="#skincare">Skincare</a>
+      <a href="#supplements">Supplements</a>
+    </div>
   </div>
 </div>
 
