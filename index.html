@@ -309,6 +309,94 @@
   .note-item strong { color: var(--text); font-weight: 500; }
 
   .footer { margin-top: 64px; padding-top: 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; flex-wrap: wrap; gap: 8px; }
+
+  /* ── MOBILE ───────────────────────────────────────────── */
+  @media (max-width: 600px) {
+
+    /* Nav */
+    .nav-inner { gap: 6px; padding: 10px 12px; flex-wrap: wrap; }
+    .nav-link { font-size: 9px; padding: 4px 8px; letter-spacing: 1px; }
+
+    /* Wrap */
+    .wrap { padding: 0 14px; }
+
+    /* Hero */
+    .hero { padding: 32px 0 20px; }
+
+    /* Section title */
+    .section-title { font-size: 22px; }
+    .section-intro { font-size: 12px; }
+
+    /* Schedule blocks */
+    .block { grid-template-columns: 80px 1fr; }
+    .block-time { font-size: 11px; padding: 10px 10px; }
+    .block-content { padding: 10px 12px; }
+    .block-title { font-size: 13px; }
+    .block-detail { font-size: 11px; }
+    .block-tag { display: none; }
+
+    /* Cards (workout) */
+    .card-head { padding: 14px 14px; flex-wrap: wrap; gap: 8px; }
+    .card-num { font-size: 32px; }
+    .card-title { font-size: 18px; }
+    .card-focus { font-size: 9px; padding: 3px 7px; }
+    .card-note { padding: 12px 14px; font-size: 11px; }
+
+    /* Tables — stack into cards on mobile */
+    table { display: block; }
+    thead { display: none; }
+    tbody { display: block; }
+    tr {
+      display: block;
+      padding: 12px 14px;
+      border-bottom: 1px solid #1e1e1e;
+    }
+    tr:last-child { border-bottom: none; }
+    td {
+      display: block;
+      padding: 0;
+      border: none;
+      font-size: 13px;
+    }
+    td.sets::before { content: "Sets: "; color: #555; font-size: 11px; }
+    td.reps::before { content: "Reps: "; color: #555; font-size: 11px; }
+    td.sets, td.reps {
+      display: inline;
+      margin-right: 12px;
+      font-size: 12px;
+    }
+    td:last-child { margin-top: 6px; }
+    th { display: none; }
+
+    /* Flow (meal timing) */
+    .flow-item { flex-direction: column; gap: 4px; padding: 14px 14px; }
+    .flow-time { font-size: 16px; min-width: unset; }
+    .flow-title { font-size: 13px; }
+    .flow-desc { font-size: 11px; }
+
+    /* Swap rows */
+    .swap-row { flex-direction: column; gap: 4px; padding: 12px 14px; }
+    .swap-old { font-size: 12px; }
+    .swap-arrow { display: none; }
+    .swap-new { font-size: 12px; }
+    .swap-new::before { content: "→ "; color: #c8f135; }
+
+    /* Prehab */
+    .prehab-grid { grid-template-columns: 1fr; }
+    .prehab-item { font-size: 13px; }
+
+    /* Supplement / skincare step cols */
+    .step-cols { grid-template-columns: 1fr; }
+    .two-col { grid-template-columns: 1fr; }
+    .avoid-grid { grid-template-columns: 1fr; }
+    .rules-grid { grid-template-columns: 1fr; }
+
+    /* Food table */
+    .card-head { flex-wrap: wrap; }
+
+    /* Footer */
+    .footer { flex-direction: column; gap: 6px; font-size: 9px; }
+  }
 </style>
 </head>
 <body>
